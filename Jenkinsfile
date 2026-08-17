@@ -5,11 +5,13 @@ pipeline {
         skipDefaultCheckout(true)
     }
 
-    stages {
+    triggers {
+        githubPush()
+    }
 
+    stages {
         stage('Checkout') {
             steps {
-                echo 'Checking out source code...'
                 checkout scm
             }
         }
@@ -37,20 +39,6 @@ pipeline {
             steps {
                 bat 'dotnet publish src\\GitJenkinsDemo\\GitJenkinsDemo.csproj --no-build --configuration Release --output publish'
             }
-        }
-    }
-
-    post {
-        always {
-            echo 'Pipeline execution completed.'
-        }
-
-        success {
-            echo 'SUCCESS: Build, test and publish completed.'
-        }
-
-        failure {
-            echo 'FAILED: Please check the Console Output.'
         }
     }
 }
