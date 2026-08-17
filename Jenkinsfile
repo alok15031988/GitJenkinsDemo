@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    options {
+        skipDefaultCheckout(true)
+    }
+
     stages {
 
         stage('Checkout') {
@@ -12,19 +16,20 @@ pipeline {
 
         stage('Restore') {
             steps {
-                bat 'dotnet restore GitJenkinsDemo.sln'
+                bat 'dotnet restore src\\GitJenkinsDemo\\GitJenkinsDemo.csproj'
+                bat 'dotnet restore tests\\GitJenkinsDemo.Tests\\GitJenkinsDemo.Tests.csproj'
             }
         }
 
         stage('Build') {
             steps {
-                bat 'dotnet build GitJenkinsDemo.sln --no-restore --configuration Release'
+                bat 'dotnet build src\\GitJenkinsDemo\\GitJenkinsDemo.csproj --no-restore --configuration Release'
             }
         }
 
         stage('Test') {
             steps {
-                bat 'dotnet test GitJenkinsDemo.sln --no-build --configuration Release'
+                bat 'dotnet test tests\\GitJenkinsDemo.Tests\\GitJenkinsDemo.Tests.csproj --no-restore --configuration Release'
             }
         }
 
